@@ -5,7 +5,7 @@ Code will be available soon.
 ![](figures/teaser.jpg)
 
 [ADVENT: Adversarial Entropy Minimization for Domain Adaptation in Semantic Segmentation](https://arxiv.org/abs/1811.12833)  
- [Tuan-Hung Vu](https://tuanhungvu.github.io/),  [Himalaya Jain](https://scholar.google.fr/citations?user=Xl7SNlsAAAAJ), [Maxime Bucher](https://maximebucher.github.io/), [Matthieu Cord](http://webia.lip6.fr/~cord/), [Patrick Pérez](https://ptrckprz.github.io/)  
+ [Tuan-Hung Vu](https://tuanhungvu.github.io/),  [Himalaya Jain](https://himalayajain.github.io/), [Maxime Bucher](https://maximebucher.github.io/), [Matthieu Cord](http://webia.lip6.fr/~cord/), [Patrick Pérez](https://ptrckprz.github.io/)  
  valeo.ai, France  
  IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2019 (**Oral**)
 
