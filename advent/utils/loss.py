@@ -35,4 +35,4 @@ def entropy_loss(v):
     """
     assert v.dim() == 4
     n, c, h, w = v.size()
-    return -torch.sum(torch.mul(v, torch.log2(v + 1e-30))) / (h * w * np.log2(c))
+    return -torch.sum(torch.mul(v, torch.log2(v + 1e-30))) / (n * h * w * np.log2(c))
