@@ -1,5 +1,8 @@
 # ADVENT: Adversarial Entropy Minimization for Domain Adaptation in Semantic Segmentation
 
+## Updates
+- *09/2019*: check out our new paper [DADA: Depth-aware Domain Adaptation in Semantic Segmentation](https://arxiv.org/abs/1904.01886) (accepted to ICCV 2019). With a depth-aware UDA framework, we leverage depth as the privileged information at train time to boost target performance. [Pytorch](https://github.com/valeoai/DADA) code and pre-trained models are coming soon.
+
 ## Paper
 ![](./teaser.jpg)
 
