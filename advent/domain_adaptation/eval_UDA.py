@@ -48,7 +48,7 @@ def eval_single(cfg, models,
         with torch.no_grad():
             output = None
             for model, model_weight in zip(models, cfg.TEST.MODEL_WEIGHT):
-                _, pred_main = model(image.cuda(device))
+                pred_main = model(image.cuda(device))[1]
                 output_ = interp(pred_main).cpu().data[0].numpy()
                 if output is None:
                     output = model_weight * output_
@@ -100,7 +100,7 @@ def eval_best(cfg, models,
             for index in tqdm(range(len(test_loader))):
                 image, label, _, name = next(test_iter)
                 with torch.no_grad():
-                    _, pred_main = models[0](image.cuda(device))
+                    pred_main = models[0](image.cuda(device))[1]
                     output = interp(pred_main).cpu().data[0].numpy()
                     output = output.transpose(1, 2, 0)
                     output = np.argmax(output, axis=2)
