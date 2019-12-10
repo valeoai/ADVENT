@@ -17,6 +17,7 @@ class CityscapesDataSet(BaseDataset):
 
         self.load_labels = load_labels
         self.info = json_load(info_path)
+        self.class_names = np.array(self.info['label'], dtype=np.str)
         self.mapping = np.array(self.info['label2train'], dtype=np.int)
         self.map_vector = np.zeros((self.mapping.shape[0],), dtype=np.int64)
         for source_label, target_label in self.mapping:
