@@ -17,19 +17,21 @@ from advent.utils.func import per_class_iu, fast_hist
 from advent.utils.serialization import pickle_dump, pickle_load
 
 
-def evaluate_domain_adaptation(models, test_loader, cfg,
-                               verbose=True):
+def evaluate_domain_adaptation( models, test_loader, cfg,
+                                fixed_test_size=True,
+                                verbose=True):
     device = cfg.GPU_ID
-    interp = nn.Upsample(size=(cfg.TEST.OUTPUT_SIZE_TARGET[1], cfg.TEST.OUTPUT_SIZE_TARGET[0]),
-                         mode='bilinear', align_corners=True)
+    interp = None
+    if fixed_test_size:
+        interp = nn.Upsample(size=(cfg.TEST.OUTPUT_SIZE_TARGET[1], cfg.TEST.OUTPUT_SIZE_TARGET[0]), mode='bilinear', align_corners=True)
     # eval
     if cfg.TEST.MODE == 'single':
         eval_single(cfg, models,
-                    device, test_loader, interp,
+                    device, test_loader, interp, fixed_test_size,
                     verbose)
     elif cfg.TEST.MODE == 'best':
         eval_best(cfg, models,
-                  device, test_loader, interp,
+                  device, test_loader, interp, fixed_test_size,
                   verbose)
     else:
         raise NotImplementedError(f"Not yet supported test mode {cfg.TEST.MODE}")
@@ -37,7 +39,7 @@ def evaluate_domain_adaptation(models, test_loader, cfg,
 
 def eval_single(cfg, models,
                 device, test_loader, interp,
-                verbose):
+                fixed_test_size, verbose):
     assert len(cfg.TEST.RESTORE_FROM) == len(models), 'Number of models are not matched'
     for checkpoint, model in zip(cfg.TEST.RESTORE_FROM, models):
         load_checkpoint_for_evaluation(model, checkpoint, device)
@@ -45,6 +47,8 @@ def eval_single(cfg, models,
     hist = np.zeros((cfg.NUM_CLASSES, cfg.NUM_CLASSES))
     for index, batch in tqdm(enumerate(test_loader)):
         image, label, _, name = batch
+        if not fixed_test_size:
+            interp = nn.Upsample(size=(label.shape[1], label.shape[2]), mode='bilinear', align_corners=True)
         with torch.no_grad():
             output = None
             for model, model_weight in zip(models, cfg.TEST.MODEL_WEIGHT):
@@ -62,13 +66,12 @@ def eval_single(cfg, models,
     inters_over_union_classes = per_class_iu(hist)
     print(f'mIoU = \t{round(np.nanmean(inters_over_union_classes) * 100, 2)}')
     if verbose:
-        name_classes = np.array(test_loader.dataset.info['label'], dtype=np.str)
-        display_stats(cfg, name_classes, inters_over_union_classes)
+        display_stats(cfg, test_loader.dataset.class_names, inters_over_union_classes)
 
 
 def eval_best(cfg, models,
               device, test_loader, interp,
-              verbose):
+              fixed_test_size, verbose):
     assert len(models) == 1, 'Not yet supported multi models in this mode'
     assert osp.exists(cfg.TEST.SNAPSHOT_DIR[0]), 'SNAPSHOT_DIR is not found'
     start_iter = cfg.TEST.SNAPSHOT_STEP
@@ -99,6 +102,8 @@ def eval_best(cfg, models,
             test_iter = iter(test_loader)
             for index in tqdm(range(len(test_loader))):
                 image, label, _, name = next(test_iter)
+                if not fixed_test_size:
+                    interp = nn.Upsample(size=(label.shape[1], label.shape[2]), mode='bilinear', align_corners=True)
                 with torch.no_grad():
                     pred_main = models[0](image.cuda(device))[1]
                     output = interp(pred_main).cpu().data[0].numpy()
@@ -122,8 +127,7 @@ def eval_best(cfg, models,
         print('\tCurrent best model:', cur_best_model)
         print('\tCurrent best mIoU:', cur_best_miou)
         if verbose:
-            name_classes = np.array(test_loader.dataset.info['label'], dtype=np.str)
-            display_stats(cfg, name_classes, inters_over_union_classes)
+            display_stats(cfg, test_loader.dataset.class_names, inters_over_union_classes)
 
 
 def load_checkpoint_for_evaluation(model, checkpoint, device):
