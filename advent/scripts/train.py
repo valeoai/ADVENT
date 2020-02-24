@@ -37,7 +37,7 @@ def get_arguments():
                         help="not fixing random seed.")
     parser.add_argument("--tensorboard", action="store_true",
                         help="visualize training loss with tensorboardX.")
-    parser.add_argument("--viz_every_iter", type=int, default=None,
+    parser.add_argument("--viz-every-iter", type=int, default=None,
                         help="visualize results.")
     parser.add_argument("--exp-suffix", type=str, default=None,
                         help="optional experiment suffix")
