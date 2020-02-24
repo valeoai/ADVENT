@@ -1,6 +1,7 @@
 # ADVENT: Adversarial Entropy Minimization for Domain Adaptation in Semantic Segmentation
 
 ## Updates
+- *02/2019*: Using Cyclegan translated images, The AdvEnt model achieves (**46.3%**) on GTA5-2-Cityscapes
 - *09/2019*: check out our new paper [DADA: Depth-aware Domain Adaptation in Semantic Segmentation](https://arxiv.org/abs/1904.01886) (accepted to ICCV 2019). With a depth-aware UDA framework, we leverage depth as the privileged information at train time to boost target performance. [Pytorch](https://github.com/valeoai/DADA) code and pre-trained models are coming soon.
 
 ## Paper
@@ -92,6 +93,7 @@ For evaluation, execute:
 ```bash
 $ cd <root_dir>/advent/scripts
 $ python test.py --cfg ./configs/advent_pretrained.yml
+$ python test.py --cfg ./configs/advent_cyclegan_pretrained.yml 	% trained on cycleGAN translated images
 $ python test.py --cfg ./configs/minent_pretrained.yml
 $ python test.py --cfg ./configs/advent+minent.yml
 ```
