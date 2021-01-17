@@ -2,7 +2,7 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 from torch.autograd import Variable
-
+import torch.nn as nn
 
 def cross_entropy_2d(predict, target):
     """
@@ -36,3 +36,34 @@ def entropy_loss(v):
     assert v.dim() == 4
     n, c, h, w = v.size()
     return -torch.sum(torch.mul(v, torch.log2(v + 1e-30))) / (n * h * w * np.log2(c))
+
+
+class WeightedBCEWithLogitsLoss(nn.Module):
+
+    def __init__(self, size_average=True):
+        super(WeightedBCEWithLogitsLoss, self).__init__()
+        self.size_average = size_average
+
+    def weighted(self, input, target, weight, alpha, beta):
+        if not (weight.size() == input.size()):
+            raise ValueError("weight size ({}) must be the same as input size ({})".format(weight.size(), input.size()))
+
+        max_val = (-input).clamp(min=0)
+        loss = input - input * target + max_val + (
+                    (-max_val).exp() + (-input - max_val).exp()).log()  # softmax torch.Size([1, 1, 16, 32])
+
+        if not (weight.size() == loss.size()):  # torch.Size([19, 512, 1024])
+            raise ValueError("weight size ({}) must be the same as loss size ({})".format(weight.size(), loss.size()))
+        if weight is not None:
+            loss = alpha * loss + beta * loss * weight  # ( lamda * M + Epsilon) * Loss
+
+        if self.size_average:
+            return loss.mean()
+        else:
+            return loss.sum()
+
+    def forward(self, input, target, weight, alpha, beta):
+        if weight is not None:
+            return self.weighted(input, target, weight, alpha, beta)
+        else:
+            return self.weighted(input, target, None, alpha, beta)

@@ -16,18 +16,19 @@ import yaml
 import torch
 from torch.utils import data
 
-from advent.model.deeplabv2 import get_deeplab_v2
+from advent.model.deeplabv2withfeature_o import get_deeplab_v2
 from advent.dataset.gta5 import GTA5DataSet
 from advent.dataset.cityscapes import CityscapesDataSet
 from advent.domain_adaptation.config import cfg, cfg_from_file
-from advent.domain_adaptation.train_UDA import train_domain_adaptation
+from advent.domain_adaptation.train_UDA_1109 import train_domain_adaptation
 
 warnings.filterwarnings("ignore", message="numpy.dtype size changed")
 warnings.filterwarnings("ignore")
 
 
 def get_arguments():
-    """
+    """+
+
     Parse input arguments
     """
     parser = argparse.ArgumentParser(description="Code for domain adaptation (DA) training")
@@ -117,8 +118,8 @@ def main():
                                     batch_size=cfg.TRAIN.BATCH_SIZE_SOURCE,
                                     num_workers=cfg.NUM_WORKERS,
                                     shuffle=True,
-                                    pin_memory=True,
-                                    worker_init_fn=_init_fn)
+                                    pin_memory=True)
+                                    # worker_init_fn=_init_fn)
 
     target_dataset = CityscapesDataSet(root=cfg.DATA_DIRECTORY_TARGET,
                                        list_path=cfg.DATA_LIST_TARGET,
@@ -131,8 +132,8 @@ def main():
                                     batch_size=cfg.TRAIN.BATCH_SIZE_TARGET,
                                     num_workers=cfg.NUM_WORKERS,
                                     shuffle=True,
-                                    pin_memory=True,
-                                    worker_init_fn=_init_fn)
+                                    pin_memory=True)
+                                    # worker_init_fn=_init_fn)
 
     with open(osp.join(cfg.TRAIN.SNAPSHOT_DIR, 'train_cfg.yml'), 'w') as yaml_file:
         yaml.dump(cfg, yaml_file, default_flow_style=False)

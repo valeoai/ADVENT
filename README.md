@@ -22,6 +22,31 @@ If you find this code useful for your research, please cite our [paper](https://
   year={2019}
 }
 ```
+Also see [this paper](https://arxiv.org/abs/1704.04861) for an introduction to MobileNetV2 CNN architecture for a more compact model.
+```
+@article{DBLP:journals/corr/HowardZCKWWAA17,
+  author    = {Andrew G. Howard and
+               Menglong Zhu and
+               Bo Chen and
+               Dmitry Kalenichenko and
+               Weijun Wang and
+               Tobias Weyand and
+               Marco Andreetto and
+               Hartwig Adam},
+  title     = {MobileNets: Efficient Convolutional Neural Networks for Mobile Vision
+               Applications},
+  journal   = {CoRR},
+  volume    = {abs/1704.04861},
+  year      = {2017},
+  url       = {http://arxiv.org/abs/1704.04861},
+  archivePrefix = {arXiv},
+  eprint    = {1704.04861},
+  timestamp = {Mon, 13 Aug 2018 16:46:35 +0200},
+  biburl    = {https://dblp.org/rec/journals/corr/HowardZCKWWAA17.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+```
+
 
 ## Abstract
 Semantic segmentation is a key problem for many computer vision tasks. While approaches based on convolutional neural networks constantly break new records on different benchmarks, generalizing well to diverse testing environments remains a major challenge. In numerous real world applications, there is indeed a large gap between data distributions in train and test domains, which results in severe performance loss at run-time. In this work, we address the task of unsupervised domain adaptation in semantic segmentation with losses based on the entropy of the pixel-wise predictions. To this end, we propose two novel, complementary methods using (i) an entropy loss and (ii) an adversarial loss respectively. We demonstrate state-of-the-art performance in semantic segmentation on two challenging *synthetic-2-real* set-ups and show that the approach can also be used for detection.
